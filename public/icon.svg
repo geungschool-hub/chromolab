@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#0f1419"/>
+  <g stroke-linecap="round">
+    <!-- 염색체 X 모양 (자매염색분체 2개 + 동원체) -->
+    <path d="M188 130 C150 230 150 282 188 382" stroke="#4c8dff" stroke-width="34" fill="none"/>
+    <path d="M250 130 C288 230 288 282 250 382" stroke="#4c8dff" stroke-width="34" fill="none"/>
+    <circle cx="219" cy="256" r="26" fill="#0f1419"/>
+    <path d="M300 150 C268 235 268 277 300 362" stroke="#ffa64c" stroke-width="28" fill="none"/>
+    <path d="M352 150 C384 235 384 277 352 362" stroke="#ffa64c" stroke-width="28" fill="none"/>
+    <circle cx="326" cy="256" r="22" fill="#0f1419"/>
+  </g>
+</svg>

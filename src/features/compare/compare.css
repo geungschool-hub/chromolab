@@ -1,0 +1,172 @@
+.compare {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.cmp-hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  text-align: center;
+}
+
+.cmp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.cmp-side {
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.cmp-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+}
+.cmp-ploidy {
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 999px;
+  color: #0f1419;
+  font-size: 13px;
+}
+.cmp-ploidy.ploidy-2n {
+  background: var(--ploidy-2n);
+}
+.cmp-ploidy.ploidy-n {
+  background: var(--ploidy-n);
+}
+.cmp-phase {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* 세포 그림 축소 표시 — 스케일된 실제 크기에 맞춰 박스 크기를 잡아 잘림 방지 */
+/* mitosis 네이티브 440×380, meiosis 460×380. scale 0.78 적용 */
+.cmp-stage {
+  margin: 0 auto;
+  overflow: hidden;
+}
+.cmp-stage.mitosis {
+  width: 361px; /* 440 × 0.82 */
+  height: 312px; /* 380 × 0.82 */
+}
+.cmp-stage.meiosis {
+  width: 377px; /* 460 × 0.82 */
+  height: 312px;
+}
+.cmp-scale {
+  transform-origin: top left;
+  transform: scale(0.82);
+}
+
+/* 좁은 화면에서는 더 작게(가로 넘침 방지) */
+@media (max-width: 1100px) {
+  .cmp-stage.mitosis {
+    width: 308px; /* 440 × 0.70 */
+    height: 266px;
+  }
+  .cmp-stage.meiosis {
+    width: 322px; /* 460 × 0.70 */
+    height: 266px;
+  }
+  .cmp-scale {
+    transform: scale(0.7);
+  }
+}
+
+.cmp-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+.cmp-badge.biv,
+.cmp-badge.hom {
+  background: #2b2440;
+  color: #e2caf7; /* 밝게: 어두운 배경 대비 */
+}
+.cmp-badge.chr {
+  background: #11313a;
+  color: #92ede1;
+}
+.cmp-badge.none {
+  background: transparent;
+  color: var(--muted);
+}
+
+.cmp-controls {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.cmp-controls button {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.cmp-controls button.primary {
+  background: var(--ploidy-2n);
+  color: #0f1419;
+  border-color: var(--ploidy-2n);
+  font-weight: 700;
+}
+.cmp-controls button.play {
+  background: transparent;
+  color: var(--chromatid);
+  border: 2px solid var(--chromatid);
+  border-radius: 999px;
+  font-weight: 700;
+}
+.cmp-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.cmp-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel);
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 13px;
+}
+.cmp-table th,
+.cmp-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 8px 12px;
+  text-align: center;
+}
+.cmp-table th {
+  background: #222b37;
+  color: #d4dce6; /* 어두운 배경 위 고대비 밝은 글씨 */
+  font-size: 12px;
+}
+.cmp-table td:first-child {
+  font-weight: 700;
+  color: var(--muted);
+}
+.cmp-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* 모바일: 상하 스택 */
+@media (max-width: 760px) {
+  .cmp-grid {
+    grid-template-columns: 1fr;
+  }
+}

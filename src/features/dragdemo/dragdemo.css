@@ -1,0 +1,80 @@
+.dragdemo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.dd-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+}
+.dd-hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+  max-width: 460px;
+  line-height: 1.5;
+}
+.dd-stage {
+  position: relative;
+  background: var(--panel);
+  border-radius: 16px;
+  overflow: hidden;
+  touch-action: none;
+}
+.dd-cell {
+  position: absolute;
+  inset: 24px;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: rgba(76, 141, 255, 0.04);
+}
+.dd-plate {
+  position: absolute;
+  left: 50%;
+  top: 12%;
+  bottom: 12%;
+  width: 0;
+  transform: translateX(-50%);
+  border-left: 2px dashed var(--muted);
+  transition: border-color 0.15s;
+}
+.dd-plate.active {
+  border-left-color: var(--ploidy-n);
+  box-shadow: 0 0 12px var(--ploidy-n);
+}
+.dd-plate-label {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.dd-chromo {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  /* 충분한 hit area 확보 (PRD ≥44px) */
+  padding: 8px;
+  touch-action: none;
+  user-select: none;
+}
+.dd-chromo:active {
+  cursor: grabbing;
+}
+.dd-chromo.near {
+  filter: drop-shadow(0 0 6px var(--ploidy-n));
+}
+.dd-status {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.dd-status.ok {
+  color: var(--chromatid);
+}

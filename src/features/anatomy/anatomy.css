@@ -1,0 +1,157 @@
+.anatomy {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.anatomy-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.anatomy-q {
+  font-weight: 600;
+  color: var(--muted);
+}
+.toggle {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.toggle button {
+  border: none;
+  background: transparent;
+  color: var(--text);
+  padding: 8px 14px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.toggle button.on {
+  background: var(--ploidy-2n);
+  color: #0f1419;
+  font-weight: 700;
+}
+
+.anatomy-stage {
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.homolog-pair {
+  display: flex;
+  align-items: flex-end;
+  gap: 28px;
+  position: relative;
+  padding-bottom: 28px;
+}
+.chromo-slot {
+  display: flex;
+  align-items: flex-end;
+}
+.pair-brace {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  border: 1px dashed var(--ploidy-n);
+  background: transparent;
+  color: var(--ploidy-n);
+  border-radius: 999px;
+  padding: 2px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.pair-brace.on {
+  background: var(--ploidy-n);
+  color: #0f1419;
+  border-style: solid;
+}
+.stage-hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+  max-width: 460px;
+  line-height: 1.5;
+}
+
+.term-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.chip.on {
+  background: var(--ploidy-2n);
+  color: #0f1419;
+  border-color: var(--ploidy-2n);
+  font-weight: 700;
+}
+
+.term-panel {
+  min-height: 96px;
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 16px 18px;
+  border-left: 4px solid var(--ploidy-2n);
+}
+.term-panel h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+.term-panel .en {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.term-panel p {
+  margin: 0;
+  line-height: 1.6;
+  font-size: 14px;
+}
+.term-note {
+  margin-top: 8px !important;
+  color: var(--ploidy-n);
+  font-size: 13px !important;
+}
+.term-empty {
+  color: var(--muted);
+}
+
+.anatomy-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.anatomy-legend .dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+@media (max-width: 480px) {
+  .homolog-pair {
+    gap: 16px;
+  }
+}

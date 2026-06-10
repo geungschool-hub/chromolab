@@ -1,0 +1,357 @@
+.mitosis {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* 상단 바 */
+.sim-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.phase-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.phase-title h3 {
+  margin: 0;
+  font-size: 20px;
+}
+.phase-step {
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--panel);
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+.badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.badge.rep {
+  background: #11313a;
+  color: var(--chromatid);
+}
+.badge.transient {
+  background: #3a3320;
+  color: #ffd166;
+  cursor: help;
+}
+.badge.bivalent {
+  background: #2b2440;
+  color: var(--homolog);
+}
+.badge.homolog-b {
+  background: #2b2440;
+  color: var(--homolog);
+}
+.badge.chromatid-b {
+  background: #11313a;
+  color: var(--chromatid);
+}
+.ploidy-chip {
+  font-weight: 800;
+  font-size: 15px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  color: #0f1419;
+}
+.ploidy-chip.ploidy-2n {
+  background: var(--ploidy-2n);
+}
+.ploidy-chip.ploidy-n {
+  background: var(--ploidy-n);
+}
+
+/* 본문: 좌 세포 / 우 그래프 */
+.sim-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+.sim-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.phase-note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  max-width: 440px;
+  text-align: center;
+}
+
+/* 세포 스테이지 */
+.cellview {
+  position: relative;
+  background: var(--panel);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.cell-shape {
+  position: absolute;
+  top: 8%;
+  bottom: 8%;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: rgba(76, 141, 255, 0.04);
+}
+.spindle {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.equator {
+  position: absolute;
+  top: 12%;
+  bottom: 12%;
+  width: 0;
+  transform: translateX(-50%);
+  border-left: 2px dashed transparent;
+  transition: border-color 0.2s;
+}
+.equator.active {
+  border-left-color: var(--ploidy-n);
+  box-shadow: 0 0 10px var(--ploidy-n);
+}
+.cell-body {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.sep-label {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--chromatid);
+  background: rgba(0, 0, 0, 0.45);
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+/* 그래프 */
+.graphs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.graph-card {
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 10px 8px 6px;
+}
+.graph-card h4 {
+  margin: 0 0 4px 10px;
+  font-size: 13px;
+  color: var(--text);
+}
+.graph-card h4 .m6 {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.graph-legend {
+  display: flex;
+  gap: 14px;
+  font-size: 11px;
+  padding: 2px 10px 4px;
+}
+.graph-legend .chromatid {
+  color: var(--chromatid);
+}
+.graph-legend .chromosome {
+  color: var(--homolog);
+}
+.graph-foot {
+  margin: 2px 10px 6px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* 카운터 */
+.counters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 4px;
+}
+.counter {
+  background: var(--panel);
+  border-radius: 10px;
+  padding: 10px 6px;
+  text-align: center;
+}
+.c-label {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.c-val {
+  font-size: 22px;
+  font-weight: 800;
+}
+.c-val small {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.ploidy-text-2n {
+  color: var(--ploidy-2n);
+}
+.ploidy-text-n {
+  color: var(--ploidy-n);
+}
+.chromatid-text {
+  color: var(--chromatid);
+}
+.dna-text {
+  color: var(--ploidy-2n);
+}
+
+/* 진행 레일 */
+.phase-rail {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+.rail-dot {
+  width: 22px;
+  height: 10px;
+  border-radius: 999px;
+  border: none;
+  background: var(--line);
+  cursor: pointer;
+  padding: 0;
+}
+.rail-dot.done {
+  background: var(--ploidy-2n);
+  opacity: 0.5;
+}
+.rail-dot.on {
+  background: var(--ploidy-n);
+}
+
+/* 컨트롤 */
+.sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+}
+.sim-controls button {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.sim-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 주 동작: 단계 이동 (붙여서 한 묶음) */
+.nav-group {
+  display: inline-flex;
+  gap: 6px;
+}
+.nav-group button {
+  min-width: 96px;
+}
+.nav-group button.primary {
+  background: var(--ploidy-2n);
+  color: #0f1419;
+  border-color: var(--ploidy-2n);
+  font-weight: 700;
+}
+.reset-btn.ghost {
+  background: transparent;
+  color: var(--muted);
+  border-style: dashed;
+}
+
+/* 보조 동작: 자동재생 (분리·외곽선 스타일) */
+.play-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 14px;
+  border-left: 2px solid var(--line);
+}
+.play-btn {
+  background: transparent !important;
+  color: var(--chromatid) !important;
+  border: 2px solid var(--chromatid) !important;
+  border-radius: 999px !important;
+  font-weight: 700;
+}
+.play-btn.playing {
+  background: var(--chromatid) !important;
+  color: #0f1419 !important;
+}
+.speed {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.speed .spd {
+  padding: 5px 9px;
+  font-size: 12px;
+}
+.speed .spd.on {
+  background: var(--ploidy-n);
+  color: #0f1419;
+  border-color: var(--ploidy-n);
+  font-weight: 700;
+}
+
+@media (max-width: 560px) {
+  .play-group {
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid var(--line);
+    padding-top: 10px;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.result-card {
+  background: #11313a;
+  color: var(--chromatid);
+  border-radius: 12px;
+  padding: 14px 18px;
+  text-align: center;
+  font-size: 15px;
+}
+
+/* 반응형: 좁아지면 세로 스택 */
+@media (max-width: 880px) {
+  .sim-body {
+    grid-template-columns: 1fr;
+  }
+  .cellview {
+    width: 100% !important;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+}

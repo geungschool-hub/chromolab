@@ -1,0 +1,7 @@
+.bivalent-label {
+  color: var(--homolog);
+}
+.homolog-label {
+  color: var(--homolog);
+  background: rgba(43, 36, 64, 0.6);
+}

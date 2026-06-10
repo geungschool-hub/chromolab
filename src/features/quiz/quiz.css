@@ -1,0 +1,142 @@
+.quiz {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.quiz-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.quiz-score {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.score-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+.score-num {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.quiz-q {
+  margin: 0;
+  font-size: 15px;
+}
+.quiz-figure {
+  background: var(--panel);
+  border-radius: 16px;
+  padding: 8px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.quiz-questions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+.quiz-item {
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 12px;
+}
+.qi-prompt {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.qi-options {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.qi-opt {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+}
+.qi-opt.sel {
+  background: var(--ploidy-2n);
+  color: #0f1419;
+  border-color: var(--ploidy-2n);
+}
+.qi-opt.correct {
+  background: var(--chromatid);
+  color: #0f1419;
+  border-color: var(--chromatid);
+}
+.qi-opt.wrong {
+  background: #5a2a2a;
+  color: #ffd1d1;
+  border-color: #5a2a2a;
+}
+.qi-opt:disabled {
+  cursor: default;
+}
+.qi-explain {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.qi-explain.ok {
+  color: var(--chromatid);
+}
+.qi-explain.no {
+  color: #ff9b9b;
+}
+
+.quiz-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.quiz-controls .primary {
+  background: var(--ploidy-2n);
+  color: #0f1419;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.quiz-controls .primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.quiz-controls .ghost {
+  background: transparent;
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .quiz-questions {
+    grid-template-columns: 1fr;
+  }
+}

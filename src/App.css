@@ -1,0 +1,290 @@
+/* 1단계 점검 화면 스타일 — 임시. 실제 디자인 시스템은 2단계 이후 도입. */
+:root {
+  --bg: #0f1419;
+  --panel: #1a212b;
+  --line: #2b3543;
+  --text: #e6edf3;
+  --muted: #8b98a8;
+  /* 핵상 색: 색맹 대응(파랑↔주황, 빨강-초록 회피) */
+  --ploidy-2n: #4c8dff;
+  --ploidy-n: #ffa64c;
+  --homolog: #c792ea;
+  --chromatid: #5ad1c8;
+  --spindle: #9aa7b5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+  color: var(--text);
+  font-family:
+    'Pretendard',
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
+}
+
+.app-header h1 {
+  margin: 0 0 4px;
+  font-size: 28px;
+}
+.teacher-tag {
+  margin-left: 10px;
+  font-size: 13px;
+  background: var(--ploidy-n);
+  color: #0f1419;
+  padding: 2px 10px;
+  border-radius: 999px;
+  vertical-align: middle;
+}
+.app.teacher-mode {
+  font-size: 1.15rem;
+}
+.subtitle {
+  margin: 0 0 6px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 20px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+}
+.tab {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.loading {
+  color: var(--muted);
+  padding: 24px;
+  text-align: center;
+}
+
+/* 모바일: 탭이 많으면 가로 스크롤 */
+@media (max-width: 720px) {
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* 접근성: 동작 줄이기 — CSS 트랜지션 최소화(Framer는 MotionConfig가 처리) */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+.tab.on {
+  background: var(--ploidy-2n);
+  color: #0f1419;
+  border-color: var(--ploidy-2n);
+  font-weight: 700;
+}
+.note {
+  margin: 0 0 20px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.note code,
+.app-header code {
+  background: var(--panel);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.phase-block {
+  margin-bottom: 28px;
+}
+.phase-block h2 {
+  font-size: 18px;
+  margin: 0 0 10px;
+  border-left: 4px solid var(--ploidy-2n);
+  padding-left: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel);
+  border-radius: 10px;
+  overflow: hidden;
+}
+th,
+td {
+  padding: 9px 12px;
+  text-align: center;
+  font-size: 14px;
+  border-bottom: 1px solid var(--line);
+}
+th {
+  background: #222b37;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 12px;
+}
+td.phase-name {
+  text-align: left;
+  font-weight: 600;
+}
+tr.interphase td {
+  background: rgba(255, 255, 255, 0.025);
+}
+tr:last-child td {
+  border-bottom: none;
+}
+
+.ploidy {
+  display: inline-block;
+  min-width: 30px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #0f1419;
+}
+.ploidy-2n {
+  background: var(--ploidy-2n);
+}
+.ploidy-n {
+  background: var(--ploidy-n);
+}
+.per-pole {
+  color: var(--muted);
+  font-size: 12px;
+}
+.cval {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.sep {
+  font-size: 13px;
+  font-weight: 600;
+}
+.sep.homolog {
+  color: var(--homolog);
+}
+.sep.chromatid {
+  color: var(--chromatid);
+}
+.sep.none {
+  color: var(--muted);
+}
+
+.transient-badge {
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  background: #3a3320;
+  color: #ffd166;
+  cursor: help;
+  vertical-align: middle;
+}
+
+/* 즉시 뜨는 커스텀 툴팁 (네이티브 title 지연 제거) */
+.tip {
+  position: relative;
+  cursor: help;
+  outline: none;
+}
+.tip::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  width: max-content;
+  max-width: 260px;
+  white-space: normal;
+  text-align: left;
+  background: #0b0f14;
+  color: #e6edf3;
+  border: 1px solid var(--line);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.08s ease;
+  z-index: 50;
+}
+.tip:hover::after,
+.tip:focus::after,
+.tip:focus-visible::after {
+  opacity: 1;
+}
+.dna-rep {
+  margin-left: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #5ad1c8;
+  cursor: help;
+}
+.dna-norep {
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  background: #2b2440;
+  color: #c792ea;
+  cursor: help;
+}
+
+.app-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.legend {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+  color: #0f1419;
+}
+.legend-text {
+  margin-left: 4px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    /* 눈부심 완화: 순백 대신 부드러운 회청색 톤 */
+    --bg: #dde3ec;
+    --panel: #eef1f7;
+    --line: #cdd5e1;
+    --text: #1f2733;
+    --muted: #5b6675;
+    --spindle: #6b7689;
+  }
+  th {
+    background: #e3e8f0;
+  }
+}
