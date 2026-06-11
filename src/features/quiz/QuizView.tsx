@@ -97,7 +97,8 @@ export function QuizView() {
       </div>
 
       <p className="quiz-q">
-        아래 <b>{phase.labelKo}</b> 그림을 보고 답하세요.
+        아래 <b>{phase.labelKo}</b> 그림을 보고 답하세요.{' '}
+        <span className="quiz-cond">모든 문항은 세포 1개(전체) 기준</span>
       </p>
 
       <div className="quiz-figure">
@@ -133,7 +134,7 @@ export function QuizView() {
               </div>
               {graded && (
                 <div className={`qi-explain ${sel === q.answer ? 'ok' : 'no'}`}>
-                  {sel === q.answer ? '✓ 정답! ' : '✗ '}
+                  <span className="qi-mark">{sel === q.answer ? '✓ 정답!' : '✗ 오답'}</span>{' '}
                   {q.explain}
                 </div>
               )}

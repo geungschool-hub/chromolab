@@ -11,6 +11,9 @@
   --homolog: #c792ea;
   --chromatid: #5ad1c8;
   --spindle: #9aa7b5;
+  /* 정답/오답 강조색 — 테마별로 대비 확보(라이트 테마에서 덮어씀) */
+  --good: #5ad1c8;
+  --bad: #ff8a8a;
 }
 
 * {
@@ -313,6 +316,9 @@ tr:last-child td {
     --text: #1f2733;
     --muted: #5b6675;
     --spindle: #6b7689;
+    /* 라이트 테마: 민트/연빨강은 흰 배경에서 묻히므로 진한 톤으로 */
+    --good: #0f8c80;
+    --bad: #c0392b;
   }
   th {
     background: #e3e8f0;

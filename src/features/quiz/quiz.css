@@ -35,6 +35,17 @@
   margin: 0;
   font-size: 15px;
 }
+.quiz-cond {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f1419;
+  background: var(--ploidy-n);
+  padding: 2px 9px;
+  border-radius: 999px;
+  vertical-align: middle;
+}
 .quiz-figure {
   background: var(--panel);
   border-radius: 16px;
@@ -94,16 +105,34 @@
 .qi-opt:disabled {
   cursor: default;
 }
+/* 채점 후 해설 — 본문은 var(--text)로 테마별 자동 고대비(저대비 금지 규칙).
+   강조 색은 테마 인식 변수(--good/--bad)로 라이트·다크 모두 또렷하게. */
 .qi-explain {
-  margin-top: 8px;
-  font-size: 12px;
-  line-height: 1.5;
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 9px 11px;
+  border-radius: 8px;
+  border-left: 3px solid;
+  color: var(--text);
+}
+.qi-mark {
+  font-weight: 800;
+  white-space: nowrap;
 }
 .qi-explain.ok {
-  color: var(--chromatid);
+  background: rgba(90, 209, 200, 0.16);
+  border-color: var(--good);
+}
+.qi-explain.ok .qi-mark {
+  color: var(--good);
 }
 .qi-explain.no {
-  color: #ff9b9b;
+  background: rgba(255, 120, 120, 0.15);
+  border-color: var(--bad);
+}
+.qi-explain.no .qi-mark {
+  color: var(--bad);
 }
 
 .quiz-controls {

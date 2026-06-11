@@ -20,7 +20,7 @@ export function buildQuestions(phase: PhaseFacts, diploid: number): SubQuestion[
   return [
     {
       key: 'ploidy',
-      prompt: '이 시기의 핵상은?',
+      prompt: '이 세포 1개의 핵상은?',
       options: ['2n', 'n'],
       answer: phase.ploidy,
       explain:
@@ -30,17 +30,17 @@ export function buildQuestions(phase: PhaseFacts, diploid: number): SubQuestion[
     },
     {
       key: 'chromosomeCount',
-      prompt: '염색체 수는 몇 개?',
+      prompt: '이 세포 1개에 있는 염색체 수는?',
       options: [D / 2, D, 2 * D].map(String),
       answer: String(phase.chromosomeCount),
-      explain: `염색체 수는 동원체 수로 세며, 이 시기에는 ${phase.chromosomeCount}개입니다.`,
+      explain: `세포 1개(전체)를 기준으로 세면 이 시기에는 ${phase.chromosomeCount}개입니다.`,
     },
     {
       key: 'dnaRelative',
-      prompt: '일반 체세포의 G₁기 DNA 상대량을 2로 둘 때, 이 시기의 DNA 상대량은?',
+      prompt: 'G₁기 세포 1개를 2로 둘 때, 이 세포 1개의 DNA 상대량은?',
       options: ['1', '2', '4'],
       answer: String(phase.dnaRelative),
-      explain: `G₁기를 2로 두면 이 시기 DNA 상대량은 ${phase.dnaRelative} (${toCValue(phase.dnaRelative)})입니다. S기 복제로 2→4, 분열로 감소합니다.`,
+      explain: `G₁기 세포를 2로 두면 이 시기 세포 1개의 DNA 상대량은 ${phase.dnaRelative} (${toCValue(phase.dnaRelative)})입니다. S기 복제로 2→4, 분열로 감소합니다.`,
     },
   ];
 }

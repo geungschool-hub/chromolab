@@ -332,7 +332,7 @@
   font-variant-numeric: tabular-nums;
 }
 .fz-ratio-obs {
-  color: var(--chromatid);
+  color: var(--good);
   font-size: 12px;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
