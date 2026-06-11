@@ -27,17 +27,45 @@ const CompareView = lazy(() =>
 const DiversityView = lazy(() =>
   import('./features/diversity/DiversityView').then((m) => ({ default: m.DiversityView })),
 );
+const FertilizationView = lazy(() =>
+  import('./features/fertilization/FertilizationView').then((m) => ({
+    default: m.FertilizationView,
+  })),
+);
 
-type Tab = 'truth' | 'anatomy' | 'mitosis' | 'meiosis' | 'compare' | 'diversity' | 'quiz';
+type Tab =
+  | 'truth'
+  | 'anatomy'
+  | 'mitosis'
+  | 'meiosis'
+  | 'compare'
+  | 'diversity'
+  | 'fertilization'
+  | 'quiz';
 
-const TABS: { id: Tab; label: string }[] = [
-  { id: 'anatomy', label: '① 염색체 해부 (F1)' },
-  { id: 'mitosis', label: '② 체세포분열 (F2)' },
-  { id: 'meiosis', label: '③ 감수분열 (F3)' },
-  { id: 'compare', label: '④ 비교 (F6)' },
-  { id: 'diversity', label: '⑤ 생식세포 다양성' },
-  { id: 'quiz', label: '⑥ 퀴즈 (F7)' },
-  { id: 'truth', label: '정리표' },
+// 상위 분류(섹션) + 하위 탭. '한 개체 안에서' 일어나는 과정과, 수정으로 '세대를 넘어' 커지는 다양성을 구분.
+const SECTIONS: { title: string; tabs: { id: Tab; label: string }[] }[] = [
+  {
+    title: '한 개체 안에서',
+    tabs: [
+      { id: 'anatomy', label: '① 염색체 해부' },
+      { id: 'mitosis', label: '② 체세포분열' },
+      { id: 'meiosis', label: '③ 감수분열' },
+      { id: 'compare', label: '④ 비교' },
+      { id: 'diversity', label: '⑤ 생식세포 다양성' },
+    ],
+  },
+  {
+    title: '세대를 넘어',
+    tabs: [{ id: 'fertilization', label: '⑥ 수정과 자손 다양성' }],
+  },
+  {
+    title: '평가·정리',
+    tabs: [
+      { id: 'quiz', label: '퀴즈' },
+      { id: 'truth', label: '정리표' },
+    ],
+  },
 ];
 
 function PhaseTable({ title, phases }: { title: string; phases: PhaseFacts[] }) {
@@ -126,17 +154,24 @@ function App() {
         <p className="subtitle">세포분열 학습 도구 · 기본 모델 2n = {DEFAULT_DIPLOID}</p>
       </header>
 
-      <nav className="tabs" role="tablist">
-        {TABS.map((t) => (
-          <button
-            key={t.id}
-            role="tab"
-            aria-selected={tab === t.id}
-            className={tab === t.id ? 'tab on' : 'tab'}
-            onClick={() => setTab(t.id)}
-          >
-            {t.label}
-          </button>
+      <nav className="nav-sections" role="tablist" aria-label="학습 단계">
+        {SECTIONS.map((sec) => (
+          <div key={sec.title} className="nav-section">
+            <span className="nav-section-title">{sec.title}</span>
+            <div className="tabs">
+              {sec.tabs.map((t) => (
+                <button
+                  key={t.id}
+                  role="tab"
+                  aria-selected={tab === t.id}
+                  className={tab === t.id ? 'tab on' : 'tab'}
+                  onClick={() => setTab(t.id)}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
         ))}
       </nav>
 
@@ -160,6 +195,11 @@ function App() {
         {tab === 'diversity' && (
           <Suspense fallback={<p className="loading">불러오는 중…</p>}>
             <DiversityView />
+          </Suspense>
+        )}
+        {tab === 'fertilization' && (
+          <Suspense fallback={<p className="loading">불러오는 중…</p>}>
+            <FertilizationView />
           </Suspense>
         )}
         {tab === 'quiz' && (

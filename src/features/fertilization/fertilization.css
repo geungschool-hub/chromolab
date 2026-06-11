@@ -1,0 +1,358 @@
+.fertilization {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.fz-intro {
+  max-width: 660px;
+  text-align: center;
+}
+.fz-intro p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/* 부모 선택 */
+.fz-parents {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.fz-cross {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--muted);
+}
+.fz-parent {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 16px;
+  min-width: 220px;
+}
+.fz-parent-title {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 700;
+}
+.fz-genotype {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin: 2px 0 8px;
+  color: var(--text);
+}
+.fz-seg-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+.fz-seg-label {
+  font-size: 12px;
+  color: var(--muted);
+  width: 26px;
+}
+.fz-seg {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.fz-seg button {
+  border: none;
+  background: transparent;
+  color: var(--text);
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.fz-seg button.on {
+  background: var(--ploidy-2n);
+  color: #0f1419;
+}
+
+/* 생식세포 풀 */
+.fz-pools {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+.fz-pool {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 14px;
+  flex: 1 1 280px;
+  max-width: 360px;
+}
+.fz-pool-head {
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.fz-pool-head b {
+  color: var(--ploidy-n);
+}
+.fz-pool-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* 생식세포 카드 */
+.fz-gamete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 6px 8px;
+}
+.fz-gamete-cap {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 700;
+}
+.fz-chromos {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+/* 수정 무대 */
+.fz-stage {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  height: 178px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.fz-src {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--muted);
+  opacity: 0.35;
+}
+.fz-src-l {
+  left: 14px;
+}
+.fz-src-r {
+  right: 14px;
+}
+.fz-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+.fz-mover {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.fz-zygote-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 수정란 */
+.fz-zygote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: rgba(76, 141, 255, 0.1);
+  border: 2px solid var(--ploidy-2n);
+  border-radius: 14px;
+  padding: 8px 14px;
+}
+.fz-pairs {
+  gap: 14px;
+}
+.fz-pair {
+  display: flex;
+  gap: 3px;
+  padding: 0 5px;
+  border-bottom: 2px solid var(--line);
+}
+.fz-zygote-label {
+  font-size: 14px;
+  color: var(--text);
+}
+.fz-zygote-label b {
+  color: var(--ploidy-2n);
+  font-size: 17px;
+  letter-spacing: 1px;
+}
+.fz-zygote-label span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.fz-stage-cap {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+  max-width: 540px;
+  line-height: 1.55;
+}
+.fz-stage-cap b {
+  color: var(--text);
+}
+
+/* 컨트롤 */
+.fz-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.fz-controls button {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.fz-controls button.primary {
+  background: var(--chromatid);
+  color: #0f1419;
+  border-color: var(--chromatid);
+  font-weight: 800;
+}
+.fz-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.fz-counter {
+  font-size: 14px;
+  color: var(--text);
+}
+.fz-counter b {
+  color: var(--ploidy-n);
+}
+
+/* 퍼넷 격자 */
+.fz-grid-wrap {
+  width: 100%;
+  max-width: 560px;
+}
+.fz-grid-title {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 8px;
+  text-align: center;
+}
+.fz-grid-title b {
+  color: var(--text);
+}
+.fz-grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.fz-grid th,
+.fz-grid td {
+  border: 1px solid var(--line);
+  text-align: center;
+  padding: 8px 6px;
+}
+.fz-corner {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+}
+.fz-dad-head,
+.fz-mom-head {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+.fz-grid td {
+  position: relative;
+  color: var(--muted);
+}
+.fz-cell-geno {
+  font-weight: 700;
+}
+.fz-grid td.hit {
+  background: rgba(90, 209, 200, 0.16);
+  color: var(--text);
+}
+.fz-grid td.last {
+  outline: 2px solid var(--chromatid);
+  outline-offset: -2px;
+}
+.fz-cell-cnt {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--chromatid);
+}
+
+/* 요약 */
+.fz-summary {
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 16px 20px;
+  width: 100%;
+  max-width: 660px;
+}
+.fz-summary h4 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+.fz-summary ol {
+  margin: 0 0 10px;
+  padding-left: 20px;
+}
+.fz-summary li {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text);
+}
+.fz-formula {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.fz-formula b {
+  color: var(--text);
+}
+
+@media (max-width: 560px) {
+  .fz-pool {
+    max-width: none;
+  }
+}
