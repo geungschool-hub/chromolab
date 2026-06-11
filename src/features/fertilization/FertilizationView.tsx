@@ -375,6 +375,9 @@ export function FertilizationView() {
         <button onClick={() => fertilizeMany(10)} disabled={moving}>
           자손 10명 더
         </button>
+        <button onClick={() => fertilizeMany(1000)} disabled={moving}>
+          자손 1000명 더
+        </button>
         <button onClick={reset} disabled={total === 0 && !anim}>
           ↺ 자손 비우기
         </button>

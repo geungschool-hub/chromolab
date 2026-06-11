@@ -46,6 +46,38 @@
   border-radius: 999px;
   vertical-align: middle;
 }
+.quiz-cond.alt {
+  margin-left: 0;
+  margin-right: 4px;
+  background: var(--ploidy-2n);
+}
+/* 유형 선택 토글은 '분열 종류' 토글과 구분되게 주황 강조 */
+.toggle.cat button.on {
+  background: var(--ploidy-n);
+}
+
+/* 개념 문항(생식세포·수정) — 단일 카드, 보기는 세로 정렬 */
+.quiz-concept {
+  width: 100%;
+  max-width: 560px;
+}
+.quiz-concept .quiz-item {
+  padding: 16px 18px;
+}
+.quiz-concept .qi-prompt {
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.qi-options.vertical {
+  flex-direction: column;
+  align-items: stretch;
+}
+.qi-options.vertical .qi-opt {
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+}
 .quiz-figure {
   background: var(--panel);
   border-radius: 16px;

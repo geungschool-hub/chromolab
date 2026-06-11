@@ -35,8 +35,8 @@ export interface PhaseEnteredEvent extends TelemetryBase {
 export interface QuizAnsweredEvent extends TelemetryBase {
   type: 'quiz_answered';
   phaseId: string;
-  /** 무엇을 물었는가 */
-  question: 'ploidy' | 'chromosomeCount' | 'chromatidCount' | 'dnaRelative';
+  /** 무엇을 물었는가 — 시기값 문항은 SubKey, 개념 문항은 토픽명 */
+  question: 'ploidy' | 'chromosomeCount' | 'chromatidCount' | 'dnaRelative' | (string & {});
   correct: boolean;
   /** 시도 회차(1부터) */
   attempt: number;
