@@ -32,6 +32,9 @@ const FertilizationView = lazy(() =>
     default: m.FertilizationView,
   })),
 );
+const ComboView = lazy(() =>
+  import('./features/combo/ComboView').then((m) => ({ default: m.ComboView })),
+);
 
 type Tab =
   | 'truth'
@@ -41,6 +44,7 @@ type Tab =
   | 'compare'
   | 'diversity'
   | 'fertilization'
+  | 'combo'
   | 'quiz';
 
 // 상위 분류(섹션) + 하위 탭. '한 개체 안에서' 일어나는 과정과, 수정으로 '세대를 넘어' 커지는 다양성을 구분.
@@ -57,7 +61,10 @@ const SECTIONS: { title: string; tabs: { id: Tab; label: string }[] }[] = [
   },
   {
     title: '세대를 넘어',
-    tabs: [{ id: 'fertilization', label: '⑥ 수정과 자손 다양성' }],
+    tabs: [
+      { id: 'fertilization', label: '⑥ 수정과 자손 다양성' },
+      { id: 'combo', label: '⑦ 종합 흐름 (상+성)' },
+    ],
   },
   {
     title: '평가·정리',
@@ -200,6 +207,11 @@ function App() {
         {tab === 'fertilization' && (
           <Suspense fallback={<p className="loading">불러오는 중…</p>}>
             <FertilizationView />
+          </Suspense>
+        )}
+        {tab === 'combo' && (
+          <Suspense fallback={<p className="loading">불러오는 중…</p>}>
+            <ComboView />
           </Suspense>
         )}
         {tab === 'quiz' && (

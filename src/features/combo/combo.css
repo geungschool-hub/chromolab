@@ -1,0 +1,300 @@
+.combo {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.combo-intro {
+  max-width: 660px;
+  text-align: center;
+}
+.combo-intro p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/* 버전/경우 토글 */
+.combo-toggle {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.combo-toggle button {
+  border: none;
+  background: transparent;
+  color: var(--text);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.combo-toggle button.on {
+  background: var(--ploidy-2n);
+  color: #0f1419;
+  font-weight: 700;
+}
+.combo-toggle.case button.on {
+  background: var(--ploidy-n);
+}
+
+/* 단계 칩 */
+.combo-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+.combo-chip {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.combo-chip.on {
+  background: var(--ploidy-2n);
+  color: #0f1419;
+  border-color: var(--ploidy-2n);
+  font-weight: 700;
+}
+.combo-chip.done {
+  opacity: 0.55;
+}
+
+/* 무대 */
+.combo-stage {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  min-height: 250px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.combo-scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+/* 부모 세포(타원) */
+.combo-cell {
+  border: 2px solid var(--line);
+  border-radius: 46% / 40%;
+  background: rgba(120, 140, 170, 0.06);
+  padding: 16px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+.combo-cell-title {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
+}
+.combo-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 22px;
+}
+
+/* 중기Ⅰ 적도판 배열 */
+.combo-meta {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 6px 0;
+}
+.combo-equator {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  border-left: 2px dashed var(--ploidy-n);
+}
+.combo-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: flex-end;
+}
+.combo-side {
+  display: flex;
+  justify-content: center;
+}
+
+/* 생식세포 카드들 */
+.combo-gametes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.combo-gamete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 7px 10px;
+}
+.combo-gamete .chromos {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+}
+.combo-gamete-cap {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* 수정/자손 */
+.combo-fert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.combo-op {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--muted);
+}
+.combo-zygote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: rgba(76, 141, 255, 0.1);
+  border: 2px solid var(--ploidy-2n);
+  border-radius: 14px;
+  padding: 8px 14px;
+}
+.combo-zygote .chromos {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+.combo-zygote-label {
+  font-size: 14px;
+  color: var(--text);
+}
+.combo-zygote-label b {
+  color: var(--ploidy-2n);
+  letter-spacing: 0.5px;
+}
+.combo-sex-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 999px;
+  margin-left: 4px;
+}
+.combo-sex-badge.son {
+  background: #e2ecf8;
+  color: #1255a0;
+}
+.combo-sex-badge.daughter {
+  background: #fce4ef;
+  color: #b03070;
+}
+
+.combo-cap {
+  font-size: 13px;
+  color: var(--text);
+  text-align: center;
+  max-width: 560px;
+  line-height: 1.55;
+}
+.combo-cap strong {
+  color: var(--ploidy-2n);
+}
+
+/* 컨트롤 */
+.combo-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.combo-controls button {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.combo-controls button.primary {
+  background: var(--ploidy-2n);
+  color: #0f1419;
+  border-color: var(--ploidy-2n);
+  font-weight: 700;
+}
+.combo-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 요약 */
+.combo-summary {
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 16px 18px;
+  width: 100%;
+  max-width: 620px;
+}
+.combo-summary h4 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+.combo-summary table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+.combo-summary th,
+.combo-summary td {
+  border: 1px solid var(--line);
+  padding: 6px 8px;
+  text-align: center;
+}
+.combo-summary thead th {
+  background: rgba(255, 255, 255, 0.03);
+}
+.combo-summary .son {
+  color: #4c8dff;
+}
+.combo-summary .daughter {
+  color: #e06ba0;
+}
+.combo-note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.combo-note b {
+  color: var(--text);
+}
