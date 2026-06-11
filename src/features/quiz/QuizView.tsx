@@ -17,11 +17,15 @@ import './quiz.css';
 
 type Category = 'phase' | 'concept';
 
-function pickPhase(process: Process): PhaseFacts {
+function pickPhase(process: Process, avoidId?: string): PhaseFacts {
   const phases = (process === 'mitosis' ? buildMitosisPhases : buildMeiosisPhases)(
     DEFAULT_DIPLOID,
   ).filter(isQuizable);
-  return phases[Math.floor(Math.random() * phases.length)]!;
+  let p = phases[Math.floor(Math.random() * phases.length)]!;
+  for (let i = 0; i < 20 && avoidId && p.id === avoidId; i++) {
+    p = phases[Math.floor(Math.random() * phases.length)]!;
+  }
+  return p;
 }
 
 export function QuizView() {
@@ -41,13 +45,13 @@ export function QuizView() {
 
   const newQuestion = (proc: Process = process) => {
     setProcess(proc);
-    setPhase(pickPhase(proc));
+    setPhase((prev) => pickPhase(proc, prev.id));
     setSelected({});
     setGraded(false);
   };
 
   const newConcept = () => {
-    setConcept(pickConceptQuestion());
+    setConcept((prev) => pickConceptQuestion(Math.random, prev.prompt));
     setConceptSel(undefined);
     setGraded(false);
   };

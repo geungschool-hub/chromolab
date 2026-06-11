@@ -114,7 +114,14 @@ const d4: Gen = () => ({
 
 const TEMPLATES: Gen[] = [c1, c2, c3, d1, d2, d3, d4];
 
-/** 개념 문항 1개를 무작위로 생성 */
-export function pickConceptQuestion(rng: () => number = Math.random): ConceptQuestion {
-  return pick(TEMPLATES, rng)(rng);
+/** 개념 문항 1개를 무작위로 생성. avoidPrompt가 주어지면 직전 문항과 같은 문제를 피한다. */
+export function pickConceptQuestion(
+  rng: () => number = Math.random,
+  avoidPrompt?: string,
+): ConceptQuestion {
+  let q = pick(TEMPLATES, rng)(rng);
+  for (let i = 0; i < 20 && avoidPrompt && q.prompt === avoidPrompt; i++) {
+    q = pick(TEMPLATES, rng)(rng);
+  }
+  return q;
 }
