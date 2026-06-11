@@ -9,6 +9,8 @@ import {
   genotypeLabel,
   randomGamete,
   diversityStats,
+  genotypeRatios,
+  simplestRatio,
   type Genotype,
 } from '../features/fertilization/genetics';
 
@@ -64,6 +66,32 @@ describe('자손 다양성 통계', () => {
     expect(s.fertilizationCombos).toBe(4);
     expect(s.distinctGenotypes).toBe(4);
     expect(s.genotypeList).toEqual(['AaBb', 'Aabb', 'aaBb', 'aabb']);
+  });
+});
+
+describe('자손 유전자형 이론 비율', () => {
+  it('AaBb × AaBb → 9종, AaBb가 4/16로 최다 · 합 16', () => {
+    const r = genotypeRatios({ A: 'Aa', B: 'Bb' }, { A: 'Aa', B: 'Bb' });
+    expect(r).toHaveLength(9);
+    expect(r[0]).toEqual({ label: 'AaBb', count: 4, total: 16 });
+    expect(r.reduce((s, x) => s + x.count, 0)).toBe(16);
+    // 양 끝 동형접합은 각각 1/16
+    expect(r.find((x) => x.label === 'AABB')!.count).toBe(1);
+    expect(r.find((x) => x.label === 'aabb')!.count).toBe(1);
+  });
+
+  it('Aa × Aa(B쌍 동형) → Aa:AA:aa = 2:1:1 (전체 합 4)', () => {
+    const r = genotypeRatios({ A: 'Aa', B: 'BB' }, { A: 'Aa', B: 'BB' });
+    const byLabel = Object.fromEntries(r.map((x) => [x.label, x.count]));
+    expect(byLabel['AaBB']).toBe(2);
+    expect(byLabel['AABB']).toBe(1);
+    expect(byLabel['aaBB']).toBe(1);
+  });
+
+  it('simplestRatio: [4,2,2,2,2,1,1,1,1] 그대로, [4,2,2] → [2,1,1]', () => {
+    expect(simplestRatio([4, 2, 2, 2, 2, 1, 1, 1, 1])).toEqual([4, 2, 2, 2, 2, 1, 1, 1, 1]);
+    expect(simplestRatio([4, 2, 2])).toEqual([2, 1, 1]);
+    expect(simplestRatio([6, 3, 9])).toEqual([2, 1, 3]);
   });
 });
 

@@ -251,12 +251,112 @@
   cursor: not-allowed;
 }
 
+.fz-controls-note {
+  margin: 0;
+  max-width: 560px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.fz-controls-note b {
+  color: var(--text);
+}
+
 .fz-counter {
   font-size: 14px;
   color: var(--text);
 }
 .fz-counter b {
   color: var(--ploidy-n);
+}
+
+/* 자손 유전자형 이론 비율 */
+.fz-ratios {
+  width: 100%;
+  max-width: 560px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 18px;
+}
+.fz-ratios-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.fz-ratios-title span {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 12px;
+}
+.fz-ratio-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.fz-ratio-row {
+  display: grid;
+  grid-template-columns: 48px 1fr 42px 48px auto;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.fz-ratio-geno {
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: 0.3px;
+}
+.fz-ratio-track {
+  height: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.fz-ratio-fill {
+  display: block;
+  height: 100%;
+  background: var(--ploidy-2n);
+  border-radius: 999px;
+}
+.fz-ratio-frac {
+  color: var(--muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.fz-ratio-pct {
+  color: var(--text);
+  font-weight: 700;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.fz-ratio-obs {
+  color: var(--chromatid);
+  font-size: 12px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.fz-ratio-summary {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--muted);
+}
+.fz-ratio-summary b {
+  color: var(--ploidy-n);
+  letter-spacing: 1px;
+}
+
+@media (max-width: 480px) {
+  .fz-ratio-row {
+    grid-template-columns: 44px 1fr 38px 42px;
+  }
+  .fz-ratio-obs {
+    grid-column: 2 / -1;
+    text-align: right;
+  }
 }
 
 /* 퍼넷 격자 */

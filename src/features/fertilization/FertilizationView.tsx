@@ -19,6 +19,8 @@ import {
   gameteLabel,
   genotypeLabel,
   diversityStats,
+  genotypeRatios,
+  simplestRatio,
 } from './genetics';
 import './fertilization.css';
 
@@ -171,6 +173,8 @@ export function FertilizationView() {
   const eggs = useMemo(() => distinctGametes(mom), [mom]);
   const sperms = useMemo(() => distinctGametes(dad), [dad]);
   const stats = useMemo(() => diversityStats(mom, dad), [mom, dad]);
+  const ratios = useMemo(() => genotypeRatios(mom, dad), [mom, dad]);
+  const ratioParts = useMemo(() => simplestRatio(ratios.map((r) => r.count)), [ratios]);
 
   const reset = useCallback(() => {
     setCounts({});
@@ -179,16 +183,19 @@ export function FertilizationView() {
     setAnim(null);
   }, []);
 
-  const seenGenotypes = useMemo(() => {
-    const s = new Set<string>();
+  // 지금까지 실제로 나온 자손을 유전자형별로 집계(이론 비율과 비교용)
+  const observedByGeno = useMemo(() => {
+    const m = new Map<string, number>();
     for (const [key, c] of Object.entries(counts)) {
       if (c > 0) {
         const [el, sl] = key.split('|');
-        s.add(genotypeLabel(combine(labelToGamete(el!), labelToGamete(sl!))));
+        const label = genotypeLabel(combine(labelToGamete(el!), labelToGamete(sl!)));
+        m.set(label, (m.get(label) ?? 0) + c);
       }
     }
-    return s.size;
+    return m;
   }, [counts]);
+  const seenGenotypes = observedByGeno.size;
 
   const recordOffspring = useCallback((egg: Gamete, sperm: Gamete) => {
     const key = `${gameteLabel(egg)}|${gameteLabel(sperm)}`;
@@ -354,6 +361,12 @@ export function FertilizationView() {
         </button>
       </div>
 
+      <p className="fz-controls-note">
+        <b>‘자손 10명 더’</b>는 어머니·아버지의 생식세포를 <b>무작위로 10번 짝지어</b> 한꺼번에
+        수정시켜요. 어떤 난자와 어떤 정자가 만날지는 우연이라, 많이 시행할수록 실제 비율이 아래{' '}
+        <b>이론값</b>에 가까워집니다.
+      </p>
+
       <div className="fz-counter">
         지금까지 자손 <b>{total}</b>명 · 나온 유전자형 <b>{seenGenotypes}</b>종 / 가능한{' '}
         <b>{stats.distinctGenotypes}</b>종
@@ -397,6 +410,40 @@ export function FertilizationView() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* 자손 유전자형 이론 비율 (자동 계산) */}
+      <div className="fz-ratios">
+        <div className="fz-ratios-title">
+          자손 유전자형 비율 <span>(이론값)</span>
+        </div>
+        <div className="fz-ratio-list">
+          {ratios.map((r) => {
+            const pct = +((r.count / r.total) * 100).toFixed(1);
+            const barW = (r.count / ratios[0]!.count) * 100;
+            const obs = observedByGeno.get(r.label) ?? 0;
+            return (
+              <div className="fz-ratio-row" key={r.label}>
+                <span className="fz-ratio-geno">{r.label}</span>
+                <span className="fz-ratio-track">
+                  <span className="fz-ratio-fill" style={{ width: `${barW}%` }} />
+                </span>
+                <span className="fz-ratio-frac">
+                  {r.count}/{r.total}
+                </span>
+                <span className="fz-ratio-pct">{pct}%</span>
+                {total > 0 && (
+                  <span className="fz-ratio-obs">
+                    관찰 {obs} ({Math.round((obs / total) * 100)}%)
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        <div className="fz-ratio-summary">
+          전체 비율(이론) = <b>{ratioParts.join(' : ')}</b>
+        </div>
       </div>
 
       {/* 요약 */}

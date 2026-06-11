@@ -116,3 +116,44 @@ export function diversityStats(mom: Genotype, dad: Genotype): DiversityStats {
     genotypeList: [...labels].sort(),
   };
 }
+
+export interface GenotypeRatio {
+  /** 자손 유전자형 (예: 'AaBb') */
+  label: string;
+  /** 퍼넷 격자에서 이 유전자형이 나오는 칸 수 */
+  count: number;
+  /** 전체 칸 수(=난자 종류 × 정자 종류). 모든 칸은 동일 확률. */
+  total: number;
+}
+
+/**
+ * 자손 유전자형의 '이론적' 비율.
+ * 이형접합 쌍은 두 대립유전자가 50:50이라 '서로 다른 생식세포'들이 모두 같은 확률 →
+ * 격자의 각 칸도 동일 확률(1/total). 따라서 비율 = (그 유전자형 칸 수)/total.
+ * 칸 수 내림차순, 동률은 라벨 오름차순으로 정렬.
+ */
+export function genotypeRatios(mom: Genotype, dad: Genotype): GenotypeRatio[] {
+  const eggs = distinctGametes(mom);
+  const sperms = distinctGametes(dad);
+  const map = new Map<string, number>();
+  for (const e of eggs)
+    for (const s of sperms) {
+      const label = genotypeLabel(combine(e, s));
+      map.set(label, (map.get(label) ?? 0) + 1);
+    }
+  const total = eggs.length * sperms.length;
+  return [...map.entries()]
+    .map(([label, count]) => ({ label, count, total }))
+    .sort((a, b) => b.count - a.count || (a.label < b.label ? -1 : 1));
+}
+
+function gcd(a: number, b: number): number {
+  return b === 0 ? a : gcd(b, a % b);
+}
+
+/** 정수 배열을 최대공약수로 나눠 가장 간단한 정수비로. 예: [4,2,2,1] → [4,2,2,1] */
+export function simplestRatio(counts: number[]): number[] {
+  if (counts.length === 0) return [];
+  const g = counts.reduce((acc, n) => gcd(acc, n));
+  return g > 1 ? counts.map((n) => n / g) : counts.slice();
+}
