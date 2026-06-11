@@ -209,6 +209,8 @@ function App() {
         )}
         {tab === 'truth' && <TruthView />}
       </main>
+
+      <footer className="app-credit">Claude AI로 이 앱을 제작함 by 고은표</footer>
     </div>
   );
 }
