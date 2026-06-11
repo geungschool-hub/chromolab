@@ -22,7 +22,10 @@ import {
   genotypeRatios,
   simplestRatio,
 } from './genetics';
+import { SexFertilizationView } from './SexFertilizationView';
 import './fertilization.css';
+
+type Mode = 'gene' | 'sex';
 
 const MOVE_MS = 750; // 난자·정자가 중앙으로 이동하는 시간(애니메이션)
 
@@ -162,6 +165,7 @@ interface Anim {
 }
 
 export function FertilizationView() {
+  const [mode, setMode] = useState<Mode>('gene');
   const [mom, setMom] = useState<Genotype>({ A: 'Aa', B: 'Bb' });
   const [dad, setDad] = useState<Genotype>({ A: 'Aa', B: 'Bb' });
   const [counts, setCounts] = useState<Record<string, number>>({});
@@ -279,243 +283,261 @@ export function FertilizationView() {
 
   return (
     <div className="fertilization">
-      <div className="fz-intro">
-        <p>
-          한 개체가 만드는 생식세포가 다양한 데다(<b>독립적 분리</b>), 어떤 난자와 어떤 정자가
-          만날지도 <b>우연</b>이에요. 그래서 자손의 유전적 다양성은 훨씬 더 커집니다. 부모의
-          유전자형을 정하고 <b>수정</b>시켜 보세요.
-        </p>
-      </div>
-
-      {/* 부모 유전자형 선택 */}
-      <div className="fz-parents">
-        <ParentPicker title="어머니 (♀)" g={mom} onChange={updateMom} />
-        <span className="fz-cross" aria-hidden>
-          ×
-        </span>
-        <ParentPicker title="아버지 (♂)" g={dad} onChange={updateDad} />
-      </div>
-
-      {/* 각 부모가 만드는 생식세포 종류 */}
-      <div className="fz-pools">
-        <div className="fz-pool">
-          <div className="fz-pool-head">
-            어머니(♀) 생식세포 — <b>{eggs.length}종류</b>
-          </div>
-          <div className="fz-pool-cards">
-            {eggs.map((g) => (
-              <GameteCard key={gameteLabel(g)} gamete={g} parent="mom" />
-            ))}
-          </div>
-        </div>
-        <div className="fz-pool">
-          <div className="fz-pool-head">
-            아버지(♂) 생식세포 — <b>{sperms.length}종류</b>
-          </div>
-          <div className="fz-pool-cards">
-            {sperms.map((g) => (
-              <GameteCard key={gameteLabel(g)} gamete={g} parent="dad" />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* 수정 무대 */}
-      <div className="fz-stage">
-        <span className="fz-src fz-src-l">♀</span>
-        <span className="fz-src fz-src-r">♂</span>
-        {!anim && <div className="fz-hint">‘수정 ▶’을 눌러 난자와 정자를 수정시켜 보세요.</div>}
-        {moving && (
-          <>
-            <motion.div
-              className="fz-mover"
-              key={`egg-${anim!.round}`}
-              initial={{ left: '15%' }}
-              animate={{ left: '39%' }}
-              transition={{ duration: 0.7, ease: 'easeInOut' }}
-            >
-              <GameteCard gamete={anim!.egg} parent="mom" caption="난자(♀)" />
-            </motion.div>
-            <motion.div
-              className="fz-mover"
-              key={`sperm-${anim!.round}`}
-              initial={{ left: '85%' }}
-              animate={{ left: '61%' }}
-              transition={{ duration: 0.7, ease: 'easeInOut' }}
-            >
-              <GameteCard gamete={anim!.sperm} parent="dad" caption="정자(♂)" />
-            </motion.div>
-          </>
-        )}
-        {anim?.phase === 'fused' && (
-          // 정렬(translate)은 정적 래퍼가, 스케일 애니메이션은 안쪽 motion이 담당
-          // — framer-motion의 transform이 CSS 중앙정렬을 덮어쓰지 않도록 분리.
-          <div className="fz-zygote-wrap">
-            <motion.div
-              key={`zyg-${anim.round}`}
-              initial={{ scale: 0.6, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.4, ease: 'backOut' }}
-            >
-              <Zygote egg={anim.egg} sperm={anim.sperm} />
-            </motion.div>
-          </div>
-        )}
-      </div>
-      <p className="fz-stage-cap">
-        난자(n) + 정자(n) → 수정란(2n). 핵상이 <b>n + n = 2n</b>으로 회복되고, 상동염색체 한쪽은
-        어머니, 다른 쪽은 아버지에게서 와요.
-      </p>
-
-      {/* 컨트롤 */}
-      <div className="fz-controls">
-        <button className="primary" onClick={fertilizeOnce} disabled={moving}>
-          수정 ▶
+      <div className="toggle fz-mode" role="group" aria-label="다양성 종류">
+        <button className={mode === 'gene' ? 'on' : ''} onClick={() => setMode('gene')}>
+          상염색체 (AaBb)
         </button>
-        <button onClick={() => fertilizeMany(10)} disabled={moving}>
-          자손 10명 더
-        </button>
-        <button onClick={() => fertilizeMany(1000)} disabled={moving}>
-          자손 1000명 더
-        </button>
-        <button onClick={reset} disabled={total === 0 && !anim}>
-          ↺ 자손 비우기
+        <button className={mode === 'sex' ? 'on' : ''} onClick={() => setMode('sex')}>
+          성염색체 (성 결정)
         </button>
       </div>
 
-      <p className="fz-controls-note">
-        <b>‘자손 10명 더’</b>는 어머니·아버지의 생식세포를 <b>무작위로 10번 짝지어</b> 한꺼번에
-        수정시켜요. 어떤 난자와 어떤 정자가 만날지는 우연이라, 많이 시행할수록 실제 비율이 아래{' '}
-        <b>이론값</b>에 가까워집니다.
-      </p>
+      {mode === 'sex' ? (
+        <SexFertilizationView />
+      ) : (
+        <>
+          <div className="fz-intro">
+            <p>
+              한 개체가 만드는 생식세포가 다양한 데다(<b>독립적 분리</b>), 어떤 난자와 어떤 정자가
+              만날지도 <b>우연</b>이에요. 그래서 자손의 유전적 다양성은 훨씬 더 커집니다. 부모의
+              유전자형을 정하고 <b>수정</b>시켜 보세요.
+            </p>
+          </div>
 
-      <div className="fz-counter">
-        지금까지 자손 <b>{total}</b>명 · 나온 유전자형 <b>{seenGenotypes}</b>종 / 가능한{' '}
-        <b>{stats.distinctGenotypes}</b>종
-      </div>
+          {/* 부모 유전자형 선택 */}
+          <div className="fz-parents">
+            <ParentPicker title="어머니 (♀)" g={mom} onChange={updateMom} />
+            <span className="fz-cross" aria-hidden>
+              ×
+            </span>
+            <ParentPicker title="아버지 (♂)" g={dad} onChange={updateDad} />
+          </div>
 
-      {/* 퍼넷 격자 — 가능한 수정 조합 */}
-      <div className="fz-grid-wrap">
-        <div className="fz-grid-title">
-          가능한 수정 조합: 난자 <b>{stats.momGameteTypes}</b>종 × 정자{' '}
-          <b>{stats.dadGameteTypes}</b>종 = <b>{stats.fertilizationCombos}</b>가지
-        </div>
-        <table className="fz-grid">
-          <thead>
-            <tr>
-              <th className="fz-corner">난자＼정자</th>
-              {sperms.map((s) => (
-                <th key={gameteLabel(s)} className="fz-dad-head">
-                  ♂ {gameteLabel(s)}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {eggs.map((e) => (
-              <tr key={gameteLabel(e)}>
-                <th className="fz-mom-head">♀ {gameteLabel(e)}</th>
-                {sperms.map((s) => {
-                  const key = `${gameteLabel(e)}|${gameteLabel(s)}`;
-                  const cnt = counts[key] ?? 0;
-                  return (
-                    <td
-                      key={key}
-                      className={`${cnt > 0 ? 'hit' : ''} ${lastCell === key ? 'last' : ''}`}
-                    >
-                      <span className="fz-cell-geno">{genotypeLabel(combine(e, s))}</span>
-                      {cnt > 0 && <span className="fz-cell-cnt">{cnt}</span>}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* 자손 유전자형 비율 — 실제 관찰(메인, 동적) + 이론값(옆에 참고용) */}
-      <div className="fz-ratios">
-        <div className="fz-ratios-cols">
-          {/* 실제 나온 자손 (관찰값에 따라 변하는 메인 그래프) */}
-          <div className="fz-ratio-card">
-            <div className="fz-col-title">
-              실제 나온 자손 <span>(총 {total}명)</span>
-            </div>
-            {total === 0 ? (
-              <p className="fz-ratio-empty">
-                아직 자손이 없어요. ‘수정 ▶’이나 ‘자손 10명 더’로 자손을 만들어 보세요.
-              </p>
-            ) : (
-              <div className="fz-ratio-list">
-                {ratioView.rows.map((r) => (
-                  <div className="fz-ratio-row" key={r.label}>
-                    <span className="fz-ratio-geno">{r.label}</span>
-                    <span className="fz-ratio-track">
-                      <span
-                        className="fz-ratio-fill obs"
-                        style={{ width: `${Math.min(100, (r.obsPct / ratioView.maxPct) * 100)}%` }}
-                      />
-                    </span>
-                    <span className="fz-ratio-val">
-                      {r.obs}명·{Math.round(r.obsPct)}%
-                    </span>
-                  </div>
+          {/* 각 부모가 만드는 생식세포 종류 */}
+          <div className="fz-pools">
+            <div className="fz-pool">
+              <div className="fz-pool-head">
+                어머니(♀) 생식세포 — <b>{eggs.length}종류</b>
+              </div>
+              <div className="fz-pool-cards">
+                {eggs.map((g) => (
+                  <GameteCard key={gameteLabel(g)} gamete={g} parent="mom" />
                 ))}
+              </div>
+            </div>
+            <div className="fz-pool">
+              <div className="fz-pool-head">
+                아버지(♂) 생식세포 — <b>{sperms.length}종류</b>
+              </div>
+              <div className="fz-pool-cards">
+                {sperms.map((g) => (
+                  <GameteCard key={gameteLabel(g)} gamete={g} parent="dad" />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* 수정 무대 */}
+          <div className="fz-stage">
+            <span className="fz-src fz-src-l">♀</span>
+            <span className="fz-src fz-src-r">♂</span>
+            {!anim && <div className="fz-hint">‘수정 ▶’을 눌러 난자와 정자를 수정시켜 보세요.</div>}
+            {moving && (
+              <>
+                <motion.div
+                  className="fz-mover"
+                  key={`egg-${anim!.round}`}
+                  initial={{ left: '15%' }}
+                  animate={{ left: '39%' }}
+                  transition={{ duration: 0.7, ease: 'easeInOut' }}
+                >
+                  <GameteCard gamete={anim!.egg} parent="mom" caption="난자(♀)" />
+                </motion.div>
+                <motion.div
+                  className="fz-mover"
+                  key={`sperm-${anim!.round}`}
+                  initial={{ left: '85%' }}
+                  animate={{ left: '61%' }}
+                  transition={{ duration: 0.7, ease: 'easeInOut' }}
+                >
+                  <GameteCard gamete={anim!.sperm} parent="dad" caption="정자(♂)" />
+                </motion.div>
+              </>
+            )}
+            {anim?.phase === 'fused' && (
+              // 정렬(translate)은 정적 래퍼가, 스케일 애니메이션은 안쪽 motion이 담당
+              // — framer-motion의 transform이 CSS 중앙정렬을 덮어쓰지 않도록 분리.
+              <div className="fz-zygote-wrap">
+                <motion.div
+                  key={`zyg-${anim.round}`}
+                  initial={{ scale: 0.6, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.4, ease: 'backOut' }}
+                >
+                  <Zygote egg={anim.egg} sperm={anim.sperm} />
+                </motion.div>
               </div>
             )}
           </div>
+          <p className="fz-stage-cap">
+            난자(n) + 정자(n) → 수정란(2n). 핵상이 <b>n + n = 2n</b>으로 회복되고, 상동염색체 한쪽은
+            어머니, 다른 쪽은 아버지에게서 와요.
+          </p>
 
-          {/* 이론값 (참고) */}
-          <div className="fz-ratio-card ref">
-            <div className="fz-col-title">
-              이론값 <span>(참고)</span>
-            </div>
-            <div className="fz-ratio-list">
-              {ratioView.rows.map((r) => (
-                <div className="fz-ratio-row" key={r.label}>
-                  <span className="fz-ratio-geno">{r.label}</span>
-                  <span className="fz-ratio-track">
-                    <span
-                      className="fz-ratio-fill th"
-                      style={{ width: `${(r.thPct / ratioView.maxPct) * 100}%` }}
-                    />
-                  </span>
-                  <span className="fz-ratio-val">
-                    {r.count}/{r.total}·{+r.thPct.toFixed(1)}%
-                  </span>
-                </div>
-              ))}
-            </div>
-            <div className="fz-ratio-summary">
-              이론 비율 = <b>{ratioParts.join(' : ')}</b>
-            </div>
+          {/* 컨트롤 */}
+          <div className="fz-controls">
+            <button className="primary" onClick={fertilizeOnce} disabled={moving}>
+              수정 ▶
+            </button>
+            <button onClick={() => fertilizeMany(10)} disabled={moving}>
+              자손 10명 더
+            </button>
+            <button onClick={() => fertilizeMany(1000)} disabled={moving}>
+              자손 1000명 더
+            </button>
+            <button onClick={reset} disabled={total === 0 && !anim}>
+              ↺ 자손 비우기
+            </button>
           </div>
-        </div>
-        <p className="fz-ratios-note">
-          수정을 많이 할수록 <b>실제 나온 비율(왼쪽)</b>이 <b>이론값(오른쪽)</b>에 점점 가까워져요.
-        </p>
-      </div>
 
-      {/* 요약 */}
-      <div className="fz-summary">
-        <h4>왜 자손은 부모와도, 형제와도 다를까?</h4>
-        <ol>
-          <li>
-            <b>① 감수분열의 독립적 분리</b> — 한 사람이 만드는 생식세포가 <b>2ⁿ종류</b>. (상동염색체
-            n쌍, 여기선 n=2 → 4종류)
-          </li>
-          <li>
-            <b>② 무작위 수정</b> — 어떤 난자와 어떤 정자가 만날지는 우연. 자손 조합 ={' '}
-            <b>난자 종류 × 정자 종류</b>.
-          </li>
-        </ol>
-        <p className="fz-formula">
-          사람은 상동염색체 <b>23쌍</b> → 한 사람의 생식세포가 약 <b>840만(2²³)</b>종류. 난자 약
-          840만 × 정자 약 840만 ≈ <b>약 70조 가지</b>의 수정 조합! 여기에 교차까지 더해지면
-          형제자매도 서로 달라요.
-        </p>
-      </div>
+          <p className="fz-controls-note">
+            <b>‘자손 10명 더’</b>는 어머니·아버지의 생식세포를 <b>무작위로 10번 짝지어</b> 한꺼번에
+            수정시켜요. 어떤 난자와 어떤 정자가 만날지는 우연이라, 많이 시행할수록 실제 비율이 아래{' '}
+            <b>이론값</b>에 가까워집니다.
+          </p>
+
+          <div className="fz-counter">
+            지금까지 자손 <b>{total}</b>명 · 나온 유전자형 <b>{seenGenotypes}</b>종 / 가능한{' '}
+            <b>{stats.distinctGenotypes}</b>종
+          </div>
+
+          {/* 퍼넷 격자 — 가능한 수정 조합 */}
+          <div className="fz-grid-wrap">
+            <div className="fz-grid-title">
+              가능한 수정 조합: 난자 <b>{stats.momGameteTypes}</b>종 × 정자{' '}
+              <b>{stats.dadGameteTypes}</b>종 = <b>{stats.fertilizationCombos}</b>가지
+            </div>
+            <table className="fz-grid">
+              <thead>
+                <tr>
+                  <th className="fz-corner">난자＼정자</th>
+                  {sperms.map((s) => (
+                    <th key={gameteLabel(s)} className="fz-dad-head">
+                      ♂ {gameteLabel(s)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {eggs.map((e) => (
+                  <tr key={gameteLabel(e)}>
+                    <th className="fz-mom-head">♀ {gameteLabel(e)}</th>
+                    {sperms.map((s) => {
+                      const key = `${gameteLabel(e)}|${gameteLabel(s)}`;
+                      const cnt = counts[key] ?? 0;
+                      return (
+                        <td
+                          key={key}
+                          className={`${cnt > 0 ? 'hit' : ''} ${lastCell === key ? 'last' : ''}`}
+                        >
+                          <span className="fz-cell-geno">{genotypeLabel(combine(e, s))}</span>
+                          {cnt > 0 && <span className="fz-cell-cnt">{cnt}</span>}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* 자손 유전자형 비율 — 실제 관찰(메인, 동적) + 이론값(옆에 참고용) */}
+          <div className="fz-ratios">
+            <div className="fz-ratios-cols">
+              {/* 실제 나온 자손 (관찰값에 따라 변하는 메인 그래프) */}
+              <div className="fz-ratio-card">
+                <div className="fz-col-title">
+                  실제 나온 자손 <span>(총 {total}명)</span>
+                </div>
+                {total === 0 ? (
+                  <p className="fz-ratio-empty">
+                    아직 자손이 없어요. ‘수정 ▶’이나 ‘자손 10명 더’로 자손을 만들어 보세요.
+                  </p>
+                ) : (
+                  <div className="fz-ratio-list">
+                    {ratioView.rows.map((r) => (
+                      <div className="fz-ratio-row" key={r.label}>
+                        <span className="fz-ratio-geno">{r.label}</span>
+                        <span className="fz-ratio-track">
+                          <span
+                            className="fz-ratio-fill obs"
+                            style={{
+                              width: `${Math.min(100, (r.obsPct / ratioView.maxPct) * 100)}%`,
+                            }}
+                          />
+                        </span>
+                        <span className="fz-ratio-val">
+                          {r.obs}명·{Math.round(r.obsPct)}%
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* 이론값 (참고) */}
+              <div className="fz-ratio-card ref">
+                <div className="fz-col-title">
+                  이론값 <span>(참고)</span>
+                </div>
+                <div className="fz-ratio-list">
+                  {ratioView.rows.map((r) => (
+                    <div className="fz-ratio-row" key={r.label}>
+                      <span className="fz-ratio-geno">{r.label}</span>
+                      <span className="fz-ratio-track">
+                        <span
+                          className="fz-ratio-fill th"
+                          style={{ width: `${(r.thPct / ratioView.maxPct) * 100}%` }}
+                        />
+                      </span>
+                      <span className="fz-ratio-val">
+                        {r.count}/{r.total}·{+r.thPct.toFixed(1)}%
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="fz-ratio-summary">
+                  이론 비율 = <b>{ratioParts.join(' : ')}</b>
+                </div>
+              </div>
+            </div>
+            <p className="fz-ratios-note">
+              수정을 많이 할수록 <b>실제 나온 비율(왼쪽)</b>이 <b>이론값(오른쪽)</b>에 점점
+              가까워져요.
+            </p>
+          </div>
+
+          {/* 요약 */}
+          <div className="fz-summary">
+            <h4>왜 자손은 부모와도, 형제와도 다를까?</h4>
+            <ol>
+              <li>
+                <b>① 감수분열의 독립적 분리</b> — 한 사람이 만드는 생식세포가 <b>2ⁿ종류</b>.
+                (상동염색체 n쌍, 여기선 n=2 → 4종류)
+              </li>
+              <li>
+                <b>② 무작위 수정</b> — 어떤 난자와 어떤 정자가 만날지는 우연. 자손 조합 ={' '}
+                <b>난자 종류 × 정자 종류</b>.
+              </li>
+            </ol>
+            <p className="fz-formula">
+              사람은 상동염색체 <b>23쌍</b> → 한 사람의 생식세포가 약 <b>840만(2²³)</b>종류. 난자 약
+              840만 × 정자 약 840만 ≈ <b>약 70조 가지</b>의 수정 조합! 여기에 교차까지 더해지면
+              형제자매도 서로 달라요.
+            </p>
+          </div>
+        </>
+      )}
     </div>
   );
 }

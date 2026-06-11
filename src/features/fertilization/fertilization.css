@@ -5,6 +5,16 @@
   align-items: center;
 }
 
+/* 모드 토글(상염색체 유전자 / 성염색체) */
+.fz-mode {
+  margin-bottom: 2px;
+}
+/* 퍼넷 격자 칸의 성별(딸/아들) 라벨 */
+.fz-cell-sex {
+  color: var(--muted);
+  font-size: 11px;
+}
+
 .fz-intro {
   max-width: 660px;
   text-align: center;
