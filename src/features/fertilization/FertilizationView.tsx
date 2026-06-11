@@ -210,7 +210,9 @@ export function FertilizationView() {
         thPct: (r.count / r.total) * 100,
       };
     });
-    const maxPct = Math.max(1, ...rows.map((x) => Math.max(x.thPct, x.obsPct)));
+    // 스케일은 '이론값'만으로 고정 → 관찰값이 변해도 이론 그래프는 움직이지 않음.
+    // (관찰 막대는 이 스케일을 넘으면 100%로 클램프; 수치 라벨은 항상 실제값 표시)
+    const maxPct = Math.max(1, ...rows.map((x) => x.thPct));
     return { rows, maxPct };
   }, [ratios, observedByGeno, total]);
 
@@ -449,7 +451,7 @@ export function FertilizationView() {
                     <span className="fz-ratio-track">
                       <span
                         className="fz-ratio-fill obs"
-                        style={{ width: `${(r.obsPct / ratioView.maxPct) * 100}%` }}
+                        style={{ width: `${Math.min(100, (r.obsPct / ratioView.maxPct) * 100)}%` }}
                       />
                     </span>
                     <span className="fz-ratio-val">
