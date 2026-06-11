@@ -271,25 +271,44 @@
   color: var(--ploidy-n);
 }
 
-/* 자손 유전자형 이론 비율 */
+/* 자손 유전자형 비율 — 실제 관찰(메인) + 이론값(옆에 참고) 2단 */
 .fz-ratios {
   width: 100%;
-  max-width: 560px;
+  max-width: 640px;
+}
+.fz-ratios-cols {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.fz-ratio-card {
+  flex: 1 1 0;
+  min-width: 0;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 14px;
-  padding: 14px 18px;
+  padding: 14px 16px;
 }
-.fz-ratios-title {
+.fz-ratio-card.ref {
+  background: transparent;
+  border-style: dashed;
+}
+.fz-col-title {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--text);
   margin-bottom: 12px;
 }
-.fz-ratios-title span {
+.fz-col-title span {
   color: var(--muted);
   font-weight: 600;
   font-size: 12px;
+}
+.fz-ratio-empty {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
 }
 .fz-ratio-list {
   display: flex;
@@ -298,10 +317,10 @@
 }
 .fz-ratio-row {
   display: grid;
-  grid-template-columns: 48px 1fr 42px 48px auto;
+  grid-template-columns: 38px 1fr auto;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  gap: 7px;
+  font-size: 12.5px;
 }
 .fz-ratio-geno {
   font-weight: 800;
@@ -309,53 +328,58 @@
   letter-spacing: 0.3px;
 }
 .fz-ratio-track {
-  height: 12px;
-  background: rgba(255, 255, 255, 0.06);
+  height: 11px;
+  background: rgba(140, 150, 165, 0.18);
   border-radius: 999px;
   overflow: hidden;
 }
 .fz-ratio-fill {
   display: block;
   height: 100%;
-  background: var(--ploidy-2n);
   border-radius: 999px;
+  transition: width 0.35s ease;
 }
-.fz-ratio-frac {
-  color: var(--muted);
-  text-align: right;
-  font-variant-numeric: tabular-nums;
+.fz-ratio-fill.obs {
+  background: var(--ploidy-2n);
 }
-.fz-ratio-pct {
+.fz-ratio-fill.th {
+  background: var(--muted);
+  opacity: 0.55;
+}
+.fz-ratio-val {
   color: var(--text);
-  font-weight: 700;
   text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-.fz-ratio-obs {
-  color: var(--good);
-  font-size: 12px;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+}
+.fz-ratio-card.ref .fz-ratio-val {
+  color: var(--muted);
 }
 .fz-ratio-summary {
   margin-top: 12px;
   padding-top: 10px;
   border-top: 1px solid var(--line);
-  font-size: 13px;
+  font-size: 12.5px;
   color: var(--muted);
 }
 .fz-ratio-summary b {
   color: var(--ploidy-n);
   letter-spacing: 1px;
 }
+.fz-ratios-note {
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.55;
+}
+.fz-ratios-note b {
+  color: var(--text);
+}
 
-@media (max-width: 480px) {
-  .fz-ratio-row {
-    grid-template-columns: 44px 1fr 38px 42px;
-  }
-  .fz-ratio-obs {
-    grid-column: 2 / -1;
-    text-align: right;
+@media (max-width: 520px) {
+  .fz-ratios-cols {
+    flex-direction: column;
   }
 }
 

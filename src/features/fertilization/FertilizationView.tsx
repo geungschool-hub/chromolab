@@ -197,6 +197,23 @@ export function FertilizationView() {
   }, [counts]);
   const seenGenotypes = observedByGeno.size;
 
+  // 비율 그래프용 행 데이터: 이론 순서(내림차순) 고정, 실제 관찰값을 함께. 두 그래프를 같은 가로 스케일로.
+  const ratioView = useMemo(() => {
+    const rows = ratios.map((r) => {
+      const obs = observedByGeno.get(r.label) ?? 0;
+      return {
+        label: r.label,
+        count: r.count,
+        total: r.total,
+        obs,
+        obsPct: total > 0 ? (obs / total) * 100 : 0,
+        thPct: (r.count / r.total) * 100,
+      };
+    });
+    const maxPct = Math.max(1, ...rows.map((x) => Math.max(x.thPct, x.obsPct)));
+    return { rows, maxPct };
+  }, [ratios, observedByGeno, total]);
+
   const recordOffspring = useCallback((egg: Gamete, sperm: Gamete) => {
     const key = `${gameteLabel(egg)}|${gameteLabel(sperm)}`;
     setCounts((prev) => ({ ...prev, [key]: (prev[key] ?? 0) + 1 }));
@@ -412,38 +429,67 @@ export function FertilizationView() {
         </table>
       </div>
 
-      {/* 자손 유전자형 이론 비율 (자동 계산) */}
+      {/* 자손 유전자형 비율 — 실제 관찰(메인, 동적) + 이론값(옆에 참고용) */}
       <div className="fz-ratios">
-        <div className="fz-ratios-title">
-          자손 유전자형 비율 <span>(이론값)</span>
-        </div>
-        <div className="fz-ratio-list">
-          {ratios.map((r) => {
-            const pct = +((r.count / r.total) * 100).toFixed(1);
-            const barW = (r.count / ratios[0]!.count) * 100;
-            const obs = observedByGeno.get(r.label) ?? 0;
-            return (
-              <div className="fz-ratio-row" key={r.label}>
-                <span className="fz-ratio-geno">{r.label}</span>
-                <span className="fz-ratio-track">
-                  <span className="fz-ratio-fill" style={{ width: `${barW}%` }} />
-                </span>
-                <span className="fz-ratio-frac">
-                  {r.count}/{r.total}
-                </span>
-                <span className="fz-ratio-pct">{pct}%</span>
-                {total > 0 && (
-                  <span className="fz-ratio-obs">
-                    관찰 {obs} ({Math.round((obs / total) * 100)}%)
-                  </span>
-                )}
+        <div className="fz-ratios-cols">
+          {/* 실제 나온 자손 (관찰값에 따라 변하는 메인 그래프) */}
+          <div className="fz-ratio-card">
+            <div className="fz-col-title">
+              실제 나온 자손 <span>(총 {total}명)</span>
+            </div>
+            {total === 0 ? (
+              <p className="fz-ratio-empty">
+                아직 자손이 없어요. ‘수정 ▶’이나 ‘자손 10명 더’로 자손을 만들어 보세요.
+              </p>
+            ) : (
+              <div className="fz-ratio-list">
+                {ratioView.rows.map((r) => (
+                  <div className="fz-ratio-row" key={r.label}>
+                    <span className="fz-ratio-geno">{r.label}</span>
+                    <span className="fz-ratio-track">
+                      <span
+                        className="fz-ratio-fill obs"
+                        style={{ width: `${(r.obsPct / ratioView.maxPct) * 100}%` }}
+                      />
+                    </span>
+                    <span className="fz-ratio-val">
+                      {r.obs}명·{Math.round(r.obsPct)}%
+                    </span>
+                  </div>
+                ))}
               </div>
-            );
-          })}
+            )}
+          </div>
+
+          {/* 이론값 (참고) */}
+          <div className="fz-ratio-card ref">
+            <div className="fz-col-title">
+              이론값 <span>(참고)</span>
+            </div>
+            <div className="fz-ratio-list">
+              {ratioView.rows.map((r) => (
+                <div className="fz-ratio-row" key={r.label}>
+                  <span className="fz-ratio-geno">{r.label}</span>
+                  <span className="fz-ratio-track">
+                    <span
+                      className="fz-ratio-fill th"
+                      style={{ width: `${(r.thPct / ratioView.maxPct) * 100}%` }}
+                    />
+                  </span>
+                  <span className="fz-ratio-val">
+                    {r.count}/{r.total}·{+r.thPct.toFixed(1)}%
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="fz-ratio-summary">
+              이론 비율 = <b>{ratioParts.join(' : ')}</b>
+            </div>
+          </div>
         </div>
-        <div className="fz-ratio-summary">
-          전체 비율(이론) = <b>{ratioParts.join(' : ')}</b>
-        </div>
+        <p className="fz-ratios-note">
+          수정을 많이 할수록 <b>실제 나온 비율(왼쪽)</b>이 <b>이론값(오른쪽)</b>에 점점 가까워져요.
+        </p>
       </div>
 
       {/* 요약 */}
