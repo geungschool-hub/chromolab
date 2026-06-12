@@ -11,16 +11,16 @@ type Version = 'autosex' | 'xlinked';
 type CaseArr = 'case1' | 'case2';
 
 const CHR = {
-  A: { color: '#2a7a38', len: 62, label: 'A' },
-  a: { color: '#86c997', len: 62, label: 'a' },
-  X: { color: '#9b59b6', len: 66, label: 'X' },
-  Y: { color: '#2f6fd6', len: 40, label: 'Y' },
-  XA: { color: '#9b59b6', len: 66, label: 'Xᴬ' },
-  Xa: { color: '#c79fdb', len: 66, label: 'Xᵃ' },
+  A: { color: '#2a7a38', len: 84, label: 'A' },
+  a: { color: '#74c187', len: 84, label: 'a' },
+  X: { color: '#9b59b6', len: 90, label: 'X' },
+  Y: { color: '#2f6fd6', len: 54, label: 'Y' },
+  XA: { color: '#9b59b6', len: 90, label: 'Xᴬ' },
+  Xa: { color: '#c79fdb', len: 90, label: 'Xᵃ' },
 } as const;
 type ChrKey = keyof typeof CHR;
 
-function Chr({ k, w = 18, replicated = false }: { k: ChrKey; w?: number; replicated?: boolean }) {
+function Chr({ k, w = 24, replicated = false }: { k: ChrKey; w?: number; replicated?: boolean }) {
   const c = CHR[k];
   return (
     <Chromosome
@@ -33,7 +33,7 @@ function Chr({ k, w = 18, replicated = false }: { k: ChrKey; w?: number; replica
   );
 }
 
-const STEPS = ['부모(아버지) 세포', '중기Ⅰ 배열', '생식세포', '수정', '자손'];
+const STEPS = ['부모 세포', '중기Ⅰ 배열', '생식세포', '수정', '자손'];
 
 // ── 생식세포 정의 (염색체 키 배열) ──
 const AUTOSEX = {
@@ -111,6 +111,38 @@ function makeOffspringXlinked(egg: { id: string }, sperm: { id: string }): Offsp
     son: false,
     pheno: carrier ? '딸 · 보인자(정상)' : '딸 · 정상',
   };
+}
+
+function ParentCell({ who, version }: { who: 'mother' | 'father'; version: Version }) {
+  const isMother = who === 'mother';
+  const title = isMother
+    ? `어머니 세포 (2n) · ${version === 'autosex' ? 'AaXX' : 'XᴬXᵃ'}`
+    : `아버지 세포 (2n) · ${version === 'autosex' ? 'AaXY' : 'XᴬY'}`;
+  // 성염색체 쌍: 어머니는 XX(또는 XᴬXᵃ), 아버지는 XY(또는 XᴬY)
+  const sexChr: ChrKey[] =
+    version === 'autosex'
+      ? isMother
+        ? ['X', 'X']
+        : ['X', 'Y']
+      : isMother
+        ? ['XA', 'Xa']
+        : ['XA', 'Y'];
+  return (
+    <div className="combo-cell">
+      <span className="combo-cell-title">{title}</span>
+      {version === 'autosex' && (
+        <div className="combo-row">
+          <Chr k="A" replicated />
+          <Chr k="a" replicated />
+        </div>
+      )}
+      <div className="combo-row">
+        {sexChr.map((k, i) => (
+          <Chr key={i} k={k} replicated />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 function GameteCard({ chr, cap, w = 16 }: { chr: ChrKey[]; cap?: string; w?: number }) {
@@ -220,31 +252,11 @@ export function ComboView() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35 }}
         >
-          {/* 0. 부모 세포 */}
+          {/* 0. 부모 세포 (어머니·아버지 둘 다 — 난자가 어디서 오는지 보이게) */}
           {step === 0 && (
-            <div className="combo-cell">
-              <span className="combo-cell-title">
-                아버지 세포 (2n) · {version === 'autosex' ? 'AaXY' : 'XᴬY'}
-              </span>
-              {version === 'autosex' && (
-                <div className="combo-row">
-                  <Chr k="A" replicated />
-                  <Chr k="a" replicated />
-                </div>
-              )}
-              <div className="combo-row">
-                {version === 'autosex' ? (
-                  <>
-                    <Chr k="X" replicated />
-                    <Chr k="Y" replicated />
-                  </>
-                ) : (
-                  <>
-                    <Chr k="XA" replicated />
-                    <Chr k="Y" replicated />
-                  </>
-                )}
-              </div>
+            <div className="combo-cells">
+              <ParentCell who="mother" version={version} />
+              <ParentCell who="father" version={version} />
             </div>
           )}
 
@@ -288,26 +300,36 @@ export function ComboView() {
 
           {/* 2. 생식세포 */}
           {step === 2 && (
-            <>
-              <div className="combo-gametes">
-                {model.sperm.map((s) => (
-                  <GameteCard key={s.id} chr={s.chr} cap="정자" w={14} />
-                ))}
+            <div className="combo-pools">
+              <div className="combo-pool">
+                <div className="combo-pool-head">
+                  아버지(♂) 정자 — <b>{model.sperm.length}종류</b>
+                </div>
+                <div className={`combo-pool-cards ${model.sperm.length === 4 ? 'g2' : ''}`}>
+                  {model.sperm.map((s) => (
+                    <GameteCard key={s.id} chr={s.chr} w={18} />
+                  ))}
+                </div>
               </div>
-              <div className="combo-gametes">
-                {model.egg.map((e) => (
-                  <GameteCard key={e.id} chr={e.chr} cap="난자" w={14} />
-                ))}
+              <div className="combo-pool">
+                <div className="combo-pool-head">
+                  어머니(♀) 난자 — <b>{model.egg.length}종류</b>
+                </div>
+                <div className="combo-pool-cards">
+                  {model.egg.map((e) => (
+                    <GameteCard key={e.id} chr={e.chr} w={18} />
+                  ))}
+                </div>
               </div>
-            </>
+            </div>
           )}
 
           {/* 3. 수정 */}
           {step === 3 && (
             <div className="combo-fert">
-              <GameteCard chr={fert.egg.chr} cap="난자(♀)" />
+              <GameteCard chr={fert.egg.chr} cap="난자(♀)" w={20} />
               <span className="combo-op">+</span>
-              <GameteCard chr={fert.sperm.chr} cap="정자(♂)" />
+              <GameteCard chr={fert.sperm.chr} cap="정자(♂)" w={20} />
               <span className="combo-op">→</span>
               <Zygote off={fert.off} />
             </div>
@@ -351,15 +373,30 @@ export function ComboView() {
 }
 
 function Zygote({ off, big }: { off: Offspring; big?: boolean }) {
+  const w = big ? 22 : 20;
+  // chr = [상염색체(모), 상염색체(부), 성염색체(모), 성염색체(부)] 또는 [성염색체(모), 성염색체(부)]
+  // 상동염색체 한 쌍씩 묶어, 한쪽은 어머니·다른 쪽은 아버지에게서 왔음을 보인다(2n 회복).
+  const pairs: ChrKey[][] = [];
+  for (let i = 0; i < off.chr.length; i += 2) pairs.push(off.chr.slice(i, i + 2));
   return (
     <div className="combo-zygote">
-      <div className="chromos">
-        {off.chr.map((k, i) => (
-          <Chr key={i} k={k} w={big ? 18 : 16} />
+      <div className="combo-zpairs">
+        {pairs.map((pr, pi) => (
+          <div className="combo-zpair" key={pi}>
+            <div className="chromos">
+              {pr.map((k, i) => (
+                <Chr key={i} k={k} w={w} />
+              ))}
+            </div>
+            <div className="combo-zpair-origin">
+              <span>♀</span>
+              <span>♂</span>
+            </div>
+          </div>
         ))}
       </div>
       <div className="combo-zygote-label">
-        수정란 <b>{off.geno}</b>
+        수정란 <b>{off.geno}</b> <span className="combo-2n">2n</span>
         <span className={`combo-sex-badge ${off.son ? 'son' : 'daughter'}`}>{off.pheno}</span>
       </div>
     </div>
@@ -369,17 +406,17 @@ function Zygote({ off, big }: { off: Offspring; big?: boolean }) {
 function captionOf(version: Version, step: number, c: CaseArr): string {
   if (version === 'autosex') {
     return [
-      '아버지의 세포(2n)예요. 상염색체 한 쌍(A·a)과 성염색체(X·Y)가 복제된 채로 있어요.',
-      `상염색체 쌍과 성염색체 쌍이 적도판에 무작위로 배열돼요(독립적 분리). 지금은 ${c === 'case1' ? 'A와 X' : 'A와 Y'}가 같은 쪽.`,
-      '감수분열을 거쳐 정자는 4종류(A·X, A·Y, a·X, a·Y), 어머니 난자는 2종류(A·X, a·X)가 만들어져요.',
+      '어머니(AaXX)와 아버지(AaXY)의 세포(2n)예요. 상염색체 한 쌍(A·a)과 성염색체가 복제된 채로 있어요. 어머니는 XX, 아버지는 XY.',
+      `아버지 세포에서 상염색체 쌍과 성염색체 쌍이 적도판에 무작위로 배열돼요(독립적 분리). 지금은 ${c === 'case1' ? 'A와 X' : 'A와 Y'}가 같은 쪽.`,
+      '감수분열을 거쳐 아버지 정자는 4종류(A·X, A·Y, a·X, a·Y), 어머니 난자는 2종류(A·X, a·X)가 만들어져요.',
       '난자와 정자가 무작위로 수정돼요. 상염색체 유전자형과 성별이 함께 정해져요.',
       '자손은 유전자형(AA·Aa·aa)과 성별(딸 XX·아들 XY)을 동시에 가져요.',
     ][step]!;
   }
   return [
-    '아버지의 세포(2n). 유전자가 X염색체 위에 있어요(반성유전). 아버지는 XᴬY.',
-    '성염색체 쌍(Xᴬ·Y)이 적도판에 배열돼 분리돼요.',
-    '아버지 정자는 Xᴬ·Y 2종류, 어머니(XᴬXᵃ) 난자는 Xᴬ·Xᵃ 2종류예요.',
+    '어머니(XᴬXᵃ)와 아버지(XᴬY)의 세포(2n). 유전자가 X염색체 위에 있어요(반성유전).',
+    '아버지 세포에서 성염색체 쌍(Xᴬ·Y)이 적도판에 배열돼 분리돼요.',
+    '아버지 정자는 Xᴬ·Y 2종류, 어머니 난자는 Xᴬ·Xᵃ 2종류예요.',
     '난자와 정자가 무작위로 수정돼요. 아들은 X를 어머니에게서만 받아요.',
     '딸은 X가 둘이라 열성이 잘 안 드러나고(보인자 가능), 아들은 X가 하나라 어머니의 Xᵃ를 받으면 바로 드러나요.',
   ][step]!;

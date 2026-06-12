@@ -71,12 +71,12 @@
 .combo-stage {
   position: relative;
   width: 100%;
-  max-width: 540px;
-  min-height: 250px;
+  max-width: 600px;
+  min-height: 320px;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 16px;
-  padding: 16px;
+  padding: 22px 18px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,30 +85,38 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   width: 100%;
 }
 
-/* 부모 세포(타원) */
+/* 부모 세포(타원) — 어머니·아버지 나란히 */
+.combo-cells {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  align-items: stretch;
+}
 .combo-cell {
   border: 2px solid var(--line);
   border-radius: 46% / 40%;
-  background: rgba(120, 140, 170, 0.06);
-  padding: 16px 30px;
+  background: rgba(120, 140, 170, 0.07);
+  padding: 20px 30px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
   align-items: center;
+  justify-content: center;
 }
 .combo-cell-title {
-  font-size: 12px;
-  color: var(--muted);
-  font-weight: 700;
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 800;
 }
 .combo-row {
   display: flex;
   align-items: flex-end;
-  gap: 22px;
+  gap: 20px;
 }
 
 /* 중기Ⅰ 적도판 배열 */
@@ -138,30 +146,62 @@
   justify-content: center;
 }
 
-/* 생식세포 카드들 */
-.combo-gametes {
+/* 생식세포 풀(아버지 정자 / 어머니 난자) */
+.combo-pools {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+}
+.combo-pool {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+.combo-pool-head {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.combo-pool-head b {
+  color: var(--ploidy-n);
+}
+.combo-pool-cards {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
 }
+/* 정자 4종: 한 줄에 2개씩 2×2 */
+.combo-pool-cards.g2 {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  justify-content: center;
+}
+
+/* 생식세포 카드 */
 .combo-gamete {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 10px;
-  padding: 7px 10px;
+  padding: 9px 12px;
 }
 .combo-gamete .chromos {
   display: flex;
   align-items: flex-end;
-  gap: 5px;
+  gap: 6px;
 }
 .combo-gamete-cap {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--muted);
 }
@@ -183,24 +223,62 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   background: rgba(76, 141, 255, 0.1);
   border: 2px solid var(--ploidy-2n);
-  border-radius: 14px;
-  padding: 8px 14px;
+  border-radius: 16px;
+  padding: 14px 18px;
 }
-.combo-zygote .chromos {
+/* 상동염색체 쌍 묶음 — 한쪽은 모, 한쪽은 부 (2n 회복) */
+.combo-zpairs {
   display: flex;
   align-items: flex-end;
-  gap: 6px;
+  gap: 16px;
+}
+.combo-zpair {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 0 6px;
+}
+.combo-zpair .chromos {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  border-bottom: 2px solid var(--ploidy-2n);
+  padding-bottom: 3px;
+}
+.combo-zpair-origin {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.combo-zpair-origin span {
+  flex: 1;
+  text-align: center;
 }
 .combo-zygote-label {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .combo-zygote-label b {
   color: var(--ploidy-2n);
+  font-size: 18px;
   letter-spacing: 0.5px;
+}
+.combo-2n {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
 }
 .combo-sex-badge {
   font-size: 12px;
