@@ -376,3 +376,32 @@
 .combo-note b {
   color: var(--text);
 }
+
+/* 용어 설명 콜아웃 (예: 보인자) */
+.combo-def {
+  margin-top: 12px;
+  background: rgba(76, 141, 255, 0.08);
+  border: 1px solid var(--ploidy-2n);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.combo-def-tag {
+  display: inline-block;
+  background: var(--ploidy-2n);
+  color: #0f1419;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+.combo-def p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text);
+}
+.combo-def p b {
+  color: var(--ploidy-2n);
+  font-weight: 800;
+}

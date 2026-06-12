@@ -15,13 +15,15 @@ const CHR = {
   a: { color: '#74c187', len: 84, label: 'a' },
   X: { color: '#9b59b6', len: 90, label: 'X' },
   Y: { color: '#2f6fd6', len: 54, label: 'Y' },
-  XA: { color: '#9b59b6', len: 90, label: 'Xᴬ' },
-  Xa: { color: '#c79fdb', len: 90, label: 'Xᵃ' },
+  // 대립유전자는 작은 유니코드 위첨자(ᴬ/ᵃ) 대신 base 'X' + labelSup으로 분리 → 크고 굵게 렌더
+  XA: { color: '#8e44ad', len: 90, label: 'X', sup: 'A' },
+  Xa: { color: '#d98cc4', len: 90, label: 'X', sup: 'a' },
 } as const;
 type ChrKey = keyof typeof CHR;
 
 function Chr({ k, w = 24, replicated = false }: { k: ChrKey; w?: number; replicated?: boolean }) {
   const c = CHR[k];
+  const supProp = 'sup' in c ? { labelSup: c.sup } : {};
   return (
     <Chromosome
       replicated={replicated}
@@ -29,6 +31,7 @@ function Chr({ k, w = 24, replicated = false }: { k: ChrKey; w?: number; replica
       label={c.label}
       lengthPx={c.len}
       widthPx={w}
+      {...supProp}
     />
   );
 }
@@ -503,6 +506,15 @@ function XlinkedSummary() {
         X가 하나(XᴬY 정상 · XᵃY 발현)라 어머니의 Xᵃ를 받으면 바로 드러나요 → 열성 반성유전은{' '}
         <b>아들에게 더 자주</b> 나타나요.
       </p>
+      <div className="combo-def">
+        <span className="combo-def-tag">보인자란?</span>
+        <p>
+          열성 대립유전자(<b>Xᵃ</b>)를 가지고 있지만, 우성 대립유전자(<b>Xᴬ</b>)도 함께 있어 그
+          형질이 <b>겉으로 드러나지 않는</b>(정상으로 보이는) 사람이에요. 딸 <b>XᴬXᵃ</b>가
+          대표적이죠. 자신은 증상이 없지만, 생식세포로 <b>Xᵃ를 자손에게 물려줄 수 있어요</b> —
+          그래서 정상으로 보이는 어머니에게서 발현된 아들이 태어날 수 있어요.
+        </p>
+      </div>
     </div>
   );
 }

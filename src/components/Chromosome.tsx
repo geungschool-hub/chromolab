@@ -15,6 +15,8 @@ interface ChromosomeProps {
   color: string;
   /** 유래 라벨(부/모) — 색에만 의존하지 않도록 병기 */
   label?: string;
+  /** 라벨 위첨자(대립유전자 등) — 작은 유니코드 글리프 대신 크고 굵은 tspan으로 렌더해 시인성 확보 */
+  labelSup?: string;
   onPartClick?: (part: ChromosomePart, term: string) => void;
   activeParts?: ChromosomePart[];
   /** 염색체 길이(px). 상동염색체 쌍은 같은 값, 다른 쌍은 다른 값으로 구분 */
@@ -34,6 +36,7 @@ export function Chromosome({
   replicated,
   color,
   label,
+  labelSup,
   onPartClick,
   activeParts = [],
   lengthPx = 120,
@@ -41,10 +44,11 @@ export function Chromosome({
 }: ChromosomeProps) {
   const W = widthPx;
   const L = lengthPx;
+  const labelFs = Math.max(13, W * 0.58);
   const labelH = label ? Math.max(16, W * 0.7) : 0;
   const top = 4;
-  // 라벨이 염색체 너비보다 넓을 수 있으므로 viewBox를 좌우로 넓혀 잘림 방지
-  const boxW = label ? Math.max(W, 48) : W;
+  // 라벨이 염색체 너비보다 넓을 수 있으므로 viewBox를 좌우로 넓혀 잘림 방지(위첨자 있으면 더 넓게)
+  const boxW = label ? Math.max(W, labelSup ? 58 : 48) : W;
   const vbX = -(boxW - W) / 2;
   const barH = L - 8;
   const cy = top + barH / 2;
@@ -74,7 +78,7 @@ export function Chromosome({
       viewBox={`${vbX} 0 ${boxW} ${L + labelH}`}
       style={{ overflow: 'visible' }}
       aria-label={`염색체${replicated ? '(복제됨, 염색분체 2개)' : '(복제 전, 염색분체 1개)'}${
-        label ? ` ${label}` : ''
+        label ? ` ${label}${labelSup ?? ''}` : ''
       }`}
     >
       <defs>
@@ -148,11 +152,16 @@ export function Chromosome({
           x={W / 2}
           y={L + labelH * 0.72}
           textAnchor="middle"
-          fontSize={Math.max(13, W * 0.58)}
+          fontSize={labelFs}
           fontWeight={800}
           style={{ fill: 'var(--text)' }}
         >
           {label}
+          {labelSup && (
+            <tspan fontSize={labelFs * 0.82} dy={-labelFs * 0.5} fontWeight={900}>
+              {labelSup}
+            </tspan>
+          )}
         </text>
       )}
     </svg>
